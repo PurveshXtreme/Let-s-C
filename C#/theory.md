@@ -24,6 +24,21 @@ Well-structured, beginner-friendly, interview-oriented.
 ---
 - [2. Control Flow & Error Handling](#control-flow)
 
+---
+
+- [4. Important C# Features (Placement Targeted)](#4-important-c-features-placement-targeted)
+  - [4.1 ref vs out](#41-ref-vs-out)
+  - [4.2 params Keyword](#42-params-keyword)
+  - [4.3 Enums](#43-enums)
+  - [4.4 Structs](#44-structs)
+  - [4.5 Properties (getset)](#45-properties-getset)
+  - [4.6 Indexers](#46-indexers)
+  - [4.7 Anonymous Types](#47-anonymous-types)
+  - [4.8 var vs dynamic vs object](#48-var-vs-dynamic-vs-object)
+  - [4.9 Nullable Types](#49-nullable-types)
+  - [4.10 Boxing & Unboxing](#410-boxing--unboxing)
+
+
 
 
 # -------------------------------------------
@@ -634,6 +649,275 @@ if (age < 18)
 - Exception handling = `try + catch + finally`  
 - **throw** (preferred) vs **throw ex**  
 - Custom exceptions for business rules  
+
+---
+---
+
+# 🟦 4. Important C# Features (Placement Targeted)
+
+Below are the most important C# features frequently asked in campus interviews along with definitions, examples, and key differences.
+
+---
+
+## **4.1 ref vs out**
+
+### **ref**
+- Used to pass a variable **by reference**.
+- The variable **must be initialized** before passing.
+- Both caller and callee must use the `ref` keyword.
+
+#### Example:
+```csharp
+void Modify(ref int x)
+{
+    x = x + 10;
+}
+
+int num = 5;
+Modify(ref num);   // num becomes 15
+```
+
+### **out**
+- Also passes data by reference.
+- The variable **does NOT need to be initialized** before passing.
+- The called method **must assign a value** to it.
+
+#### Example:
+```csharp
+void GetValues(out int x)
+{
+    x = 50;
+}
+
+int num;
+GetValues(out num);   // num becomes 50
+```
+
+### **ref vs out (Interview Table)**
+
+| Feature | ref | out |
+|---------|------|------|
+| Initialization required | Yes | No |
+| Must assign inside method | No | Yes |
+| Usage | When reading + writing | When only writing/output |
+
+---
+
+## **4.2 params Keyword**
+
+Allows a method to accept **variable number of arguments**.
+
+```csharp
+int Sum(params int[] nums)
+{
+    int s = 0;
+    foreach (int n in nums) s += n;
+    return s;
+}
+
+int result = Sum(1, 2, 3, 4);
+```
+
+Rules:
+- Only **one** params allowed.
+- Must be the **last parameter**.
+
+---
+
+## **4.3 Enums**
+
+Used to define a group of named constants.
+
+```csharp
+enum Days { Monday, Tuesday, Wednesday, Thursday }
+```
+
+- Underlying type is `int` by default.
+- Values start from **0, 1, 2...**
+
+---
+
+## **4.4 Structs**
+
+A **value type** used for small, lightweight objects.
+
+```csharp
+struct Point
+{
+    public int X;
+    public int Y;
+}
+```
+
+### Features:
+- Stored on **stack**
+- Cannot have a default constructor
+- Cannot inherit from another class
+- Can implement interfaces
+- Faster than classes
+
+### Struct vs Class
+
+| Feature | Struct | Class |
+|---------|---------|--------|
+| Type | Value Type | Reference Type |
+| Memory | Stack | Heap |
+| Inheritance | No | Yes |
+| Performance | Faster | Slower |
+
+---
+
+## **4.5 Properties (get/set)**
+
+Used to encapsulate fields with controlled access.
+
+```csharp
+class Person
+{
+    public string Name { get; set; } // auto-property
+}
+```
+
+With custom logic:
+
+```csharp
+private int age;
+public int Age
+{
+    get => age;
+    set => age = (value > 0) ? value : 0;
+}
+```
+
+---
+
+## **4.6 Indexers**
+
+Allows an object to be accessed like an array.
+
+```csharp
+class MyList
+{
+    private string[] data = new string[5];
+
+    public string this[int index]
+    {
+        get => data[index];
+        set => data[index] = value;
+    }
+}
+```
+
+Usage:
+```csharp
+MyList list = new MyList();
+list[0] = "Hello";
+```
+
+---
+
+## **4.7 Anonymous Types**
+
+Used when creating objects **without defining a class**.
+
+```csharp
+var emp = new { Name = "Ravi", Age = 22 };
+Console.WriteLine(emp.Name);
+```
+
+- Read-only properties  
+- Mostly used in LINQ
+
+---
+
+## **4.8 var vs dynamic vs object**
+
+### **var**
+- Compile-time type inferred by compiler.
+- Type cannot change once assigned.
+
+```csharp
+var x = 10;    // int
+var y = "Hi";  // string
+```
+
+---
+
+### **dynamic**
+- Type checking happens at **runtime**.
+- Can change type anytime.
+
+```csharp
+dynamic d = 10;
+d = "Hello";   // allowed
+```
+
+---
+
+### **object**
+- Base type of all .NET types.
+- Requires **boxing/unboxing** for value types.
+
+```csharp
+object o = 10; // boxed
+int x = (int)o; // unboxed
+```
+
+---
+
+### Comparison Table
+
+| Feature | var | dynamic | object |
+|---------|--------|-----------|---------|
+| Bind Time | Compile-time | Run-time | Run-time |
+| Type Safety | Yes | No | Yes (but requires casting) |
+| Performance | Fast | Slow | Medium |
+| Changing Type | No | Yes | Yes (with cast) |
+
+---
+
+## **4.9 Nullable Types**
+
+Allows value types to store **null**.
+
+```csharp
+int? x = null;
+```
+
+### Checking:
+```csharp
+if (x.HasValue)
+    Console.WriteLine(x.Value);
+```
+
+### Null Coalescing Operator:
+```csharp
+int result = x ?? 100; // if x is null => 100
+```
+
+---
+
+## **4.10 Boxing & Unboxing**
+
+### **Boxing**
+Converting **value type → object**
+
+```csharp
+int x = 10;
+object obj = x;   // boxing
+```
+
+### **Unboxing**
+Converting **object → value type**
+
+```csharp
+int y = (int)obj;  // unboxing
+```
+
+### Notes:
+- Boxing creates **heap allocation**
+- Unboxing requires **explicit cast**
+- Frequently asked in interviews
 
 ---
 ---
