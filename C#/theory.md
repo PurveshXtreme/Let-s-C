@@ -37,6 +37,39 @@ Well-structured, beginner-friendly, interview-oriented.
   - [4.8 var vs dynamic vs object](#48-var-vs-dynamic-vs-object)
   - [4.9 Nullable Types](#49-nullable-types)
   - [4.10 Boxing & Unboxing](#410-boxing--unboxing)
+ 
+---
+
+1. [Difference between `ref` and `out`](#1-difference-between-ref-and-out)
+2. [What are Properties in C#?](#2-what-are-properties-in-c)
+3. [Difference between `is` and `as` operators](#3-difference-between-is-and-as-operators)
+4. [What are Extension Methods?](#4-what-are-extension-methods-in-c)
+5. [Ways to Overload a Method](#5-different-ways-to-overload-a-method-in-c)
+6. [Accessibility Modifiers](#6-accessibility-modifiers-in-c)
+
+---
+
+# 🟦 5. Collections + Generics (High Priority)
+
+1. [Arrays](#1-arrays)
+2. [List\<T\>](#2-listt)
+3. [Dictionary\<TKey-TValue\>](#3-dictionarytkey-tvalue)
+4. [HashSet\<T\>](#4-hashsett)
+5. [Stack\<T\> and Queue\<T\>](#5-stackt-and-queuet)
+6. [Advantages of Generics](#6-advantages-of-generics)
+7. [IEnumerable vs ICollection](#7-ienumerable-vs-icollection)
+
+---
+
+# 📘 Data Structures & Collections — C# Interview Notes
+
+1. [What is Jagged Array?](#1-what-is-jagged-array)
+2. [Array.CopyTo() vs Array.Clone()](#2-arraycopyto-vs-arrayclone)
+3. [What is a Tuple in C#?](#3-what-is-a-tuple-in-c)
+4. [What are Indexers in C#?](#4-what-are-indexers-in-c)
+5. [What is Hashtable in C#?](#5-what-is-hashtable-in-c)
+6. [SortedList vs SortedDictionary](#6-sortedlist-vs-sorteddictionary)
+7. [Difference between Array and ArrayList](#7-difference-between-array-and-arraylist)
 
 
 
@@ -922,6 +955,400 @@ int y = (int)obj;  // unboxing
 ---
 ---
 
+## **1. Difference between `ref` and `out`**
+| Feature | `ref` | `out` |
+|--------|-------|--------|
+| Initialization | Must be initialized before passing | No need to initialize before passing |
+| Purpose | Read + Write | Only Write (method must assign value) |
+| Direction | Two-way | One-way (returns value through parameter) |
+| Use Case | Modify existing value | Return multiple values |
+
+### Example
+```csharp
+void Add(ref int x)
+{
+    x += 10;
+}
+
+void GetValue(out int y)
+{
+    y = 100; // must assign
+}
+```
+
+---
+
+## **2. What are Properties in C#?**
+Properties are **class members** that provide **controlled access** to private fields using `get` and `set`.
+
+### Key Points
+- Used for **encapsulation**
+- `get` → returns value  
+- `set` → assigns value  
+- Uses implicit `value` keyword  
+- Can be **auto-implemented**
+- Can be **read-only** or **write-only**
+
+### Example
+```csharp
+class Student
+{
+    public int Age { get; set; } // auto property
+}
+```
+
+---
+
+## **3. Difference between `is` and `as` operators**
+### **`is` operator**
+- Checks **type compatibility**
+- Returns **true/false**
+
+```csharp
+if(obj is string) { }
+```
+
+### **`as` operator**
+- Performs **safe casting**
+- Returns object if successful, otherwise **null**
+- Does NOT throw exception
+
+```csharp
+string s = obj as string;
+```
+
+---
+
+## **4. What are Extension Methods in C#?**
+Extension methods allow you to **add new methods** to existing classes **without modifying** their source code.
+
+### Requirements
+- Must be inside a **static class**
+- Must be a **static method**
+- First parameter must use **`this` keyword**
+
+### Example
+```csharp
+public static class MyExtensions
+{
+    public static int WordCount(this string str)
+    {
+        return str.Split(' ').Length;
+    }
+}
+
+int count = "Hello World".WordCount();
+```
+
+---
+
+## **5. Different ways to Overload a Method in C#**
+A method can be overloaded by changing:
+
+1. Number of parameters  
+2. Type of parameters  
+3. Order of parameters  
+
+### Example
+```csharp
+void Show(int x) { }
+void Show(double x) { }
+void Show(int x, int y) { }
+```
+
+---
+
+## **6. Accessibility Modifiers in C#**
+| Modifier | Meaning |
+|---------|---------|
+| **public** | Accessible everywhere |
+| **private** | Accessible only within the class |
+| **protected** | Accessible in class + derived classes |
+| **internal** | Accessible within same assembly |
+| **protected internal** | protected + internal |
+| **private protected** | Only derived classes **within same assembly** |
+
+---
+---
+
+# 🟦 5. Collections + Generics (High Priority)
 
 
+---
+
+## **1. Arrays**
+- Fixed size  
+- Fast indexing  
+- Stores elements of same type  
+- Located in contiguous memory  
+
+### Example
+```csharp
+int[] arr = new int[3] { 10, 20, 30 };
+```
+
+---
+
+## **2. List\<T\>**
+- Dynamic array  
+- Most commonly used collection  
+- Supports Add, Remove, Contains, Sort, etc.
+
+### Example
+```csharp
+List<int> nums = new List<int>();
+nums.Add(10);
+nums.Add(20);
+```
+
+---
+
+## **3. Dictionary\<TKey, TValue\>**
+- Stores **key–value** pairs  
+- Fast lookup (O(1) average)  
+- Key must be **unique**
+
+### Example
+```csharp
+Dictionary<int, string> students = new Dictionary<int, string>();
+students[1] = "Purvesh";
+students[2] = "John";
+```
+
+---
+
+## **4. HashSet\<T\>**
+- Stores **unique** values only  
+- No duplicates allowed  
+- No indexing (unordered)  
+- Internally uses **hashing**
+
+### Example
+```csharp
+HashSet<int> set = new HashSet<int>() { 1, 2, 2, 3 };
+```
+Result → {1, 2, 3}
+
+---
+
+## **5. Stack\<T\> and Queue\<T\>**
+
+### **Stack\<T\> (LIFO – Last In First Out)**
+```csharp
+Stack<int> st = new Stack<int>();
+st.Push(10);
+st.Push(20);
+int x = st.Pop(); // 20
+```
+
+### **Queue\<T\> (FIFO – First In First Out)**
+```csharp
+Queue<int> q = new Queue<int>();
+q.Enqueue(10);
+q.Enqueue(20);
+int x = q.Dequeue(); // 10
+```
+
+---
+
+## **6. Advantages of Generics**
+- **Type safety** (no boxing/unboxing)  
+- Better **performance**  
+- Reusability of code  
+- Compile-time error checking  
+- Stronger type constraints (`where T : class`, etc.)
+
+### Example
+```csharp
+List<string> names = new List<string>();
+```
+
+---
+
+## **7. IEnumerable vs ICollection**
+
+### **IEnumerable**
+- Read-only iteration  
+- Can use `foreach`  
+- No Add/Remove  
+- Suitable for data streams, LINQ  
+
+### **ICollection**
+- Inherits from `IEnumerable`  
+- Supports Add, Remove, Count  
+- Represents an in-memory modifiable collection  
+
+### Summary Table
+
+| Feature | IEnumerable | ICollection |
+|--------|-------------|-------------|
+| Add/Remove | ❌ No | ✅ Yes |
+| Count | ❌ No | ✅ Yes |
+| Modify Collection | ❌ No | ✅ Yes |
+| Looping | Yes | Yes |
+| Use Case | Read-only iteration | Managing collections |
+
+---
+---
+
+
+# 📘 Data Structures & Collections — C# Interview Notes
+
+---
+
+## **1. What is Jagged Array?**
+A **Jagged Array** is an array of **arrays**, where each inner array can have **different lengths**.
+
+### Key Points
+- Also called **“array of arrays”**
+- Stored as **multiple separate arrays**
+- Each row can have **different size**
+- Useful when data is irregular (e.g., marks of students)
+
+### Example
+```csharp
+int[][] jagged = new int[3][];
+jagged[0] = new int[] { 1, 2 };
+jagged[1] = new int[] { 3, 4, 5 };
+jagged[2] = new int[] { 6 };
+```
+
+---
+
+## **2. Array.CopyTo() vs Array.Clone()**
+
+### **Array.CopyTo()**
+- Copies elements into **an existing array**
+- Requires the **target array to be already created**
+- Performs **shallow copy**
+
+```csharp
+int[] a = {1, 2, 3};
+int[] b = new int[3];
+a.CopyTo(b, 0);
+```
+
+### **Array.Clone()**
+- Creates a **new array**  
+- Returns an **object** → must cast back  
+- Also **shallow copy**
+
+```csharp
+int[] a = {1, 2, 3};
+int[] b = (int[])a.Clone();
+```
+
+### Summary
+
+| Feature | CopyTo() | Clone() |
+|--------|----------|---------|
+| Creates new array | ❌ No | ✅ Yes |
+| Needs destination | ✅ Yes | ❌ No |
+| Copy type | Shallow | Shallow |
+
+---
+
+## **3. What is Tuple in C#?**
+A **Tuple** is a lightweight data structure that holds **multiple values** of different types without creating a class.
+
+### Key Points
+- Immutable  
+- Can store **multiple types**  
+- Useful for returning multiple values  
+
+### Example
+```csharp
+var person = Tuple.Create("Purvesh", 21, "Pune");
+var name = person.Item1;
+```
+
+### Modern C# Tuples (ValueTuple)
+```csharp
+(string name, int age) data = ("Purvesh", 21);
+Console.WriteLine(data.name);
+```
+
+---
+
+## **4. What are Indexers in C#?**
+Indexers allow objects to be accessed **like arrays** using the `[]` operator.
+
+### Key Points
+- Provide array-like access to class objects  
+- Use `this` keyword  
+- Used in collections, custom containers  
+
+### Example
+```csharp
+class Sample
+{
+    private int[] arr = new int[5];
+
+    public int this[int index]
+    {
+        get { return arr[index]; }
+        set { arr[index] = value; }
+    }
+}
+```
+
+---
+
+## **5. What is Hashtable in C#?**
+`Hashtable` is a **non-generic** collection that stores **key–value pairs** using hashing.
+
+### Key Points
+- Keys must be **unique**
+- Stores **object** type → **boxing/unboxing**
+- Slower compared to `Dictionary<TKey, TValue>`  
+- Found in `System.Collections`
+
+### Example
+```csharp
+Hashtable ht = new Hashtable();
+ht["id"] = 101;
+ht["name"] = "Purvesh";
+```
+
+---
+
+## **6. Difference between SortedList and SortedDictionary**
+
+| Feature | SortedList | SortedDictionary |
+|---------|-------------|------------------|
+| Internal storage | Array | Red-Black Tree |
+| Lookup performance | Faster for index-based access | Faster insert/delete |
+| Memory usage | Lower | Higher |
+| Order | Sorted by key | Sorted by key |
+| When to use | Small collections | Large dynamic collections |
+
+### Summary
+- **SortedList** → Better for small, read-heavy collections  
+- **SortedDictionary** → Better for frequent insertions & deletions  
+
+---
+
+## **7. Difference between Array and ArrayList**
+
+| Feature | Array | ArrayList |
+|---------|--------|-----------|
+| Type | Fixed type | Stores `object` (non-generic) |
+| Size | Fixed | Dynamic |
+| Performance | Faster | Slower (boxing/unboxing) |
+| Generic | Yes | No |
+| Best for | Known size & type | Unknown size & mixed data (not recommended now) |
+
+### Example
+```csharp
+int[] arr = new int[3];
+ArrayList list = new ArrayList();
+list.Add(10);       // boxing
+list.Add("text");   // stores object
+```
+
+### Modern Replacement  
+Use **List<T>** instead of `ArrayList`.
+
+---
+---
 
